@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dr. Bill Kolomyjec — Elements</title>
+  <meta name="description" content="Five generative animations by Dr. Bill Kolomyjec exploring the classical elements. Sky, air, water, earth, and fire as living code." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f2eb;
+      --bg-elev: #fffcf7;
+      --ink: #2a241c;
+      --ink-soft: #5c534a;
+      --muted: #8d8276;
+      --line: rgba(42, 36, 28, 0.12);
+      --accent: #c85a2e;
+      --accent-soft: #e08a5a;
+      --secondary: #1e5c62;
+      --secondary-soft: #4a8a8e;
+      --gold: #b8952a;
+      --gold-soft: #d4b85a;
+      --card-shadow: 0 18px 50px rgba(42, 36, 28, 0.08);
+      --overlay: rgba(18, 16, 14, 0.68);
+      --hero-fade: linear-gradient(180deg, rgba(246, 242, 235, 0) 0%, var(--bg) 100%);
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0c1011;
+      --bg-elev: #14191a;
+      --ink: #f5f0e8;
+      --ink-soft: #d0c8bc;
+      --muted: #9a9084;
+      --line: rgba(245, 240, 232, 0.12);
+      --accent: #e07040;
+      --accent-soft: #f0a070;
+      --secondary: #7eb8b8;
+      --secondary-soft: #a8d4d4;
+      --gold: #e0c56a;
+      --gold-soft: #f0d88a;
+      --card-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+      --overlay: rgba(6, 8, 9, 0.82);
+      --hero-fade: linear-gradient(180deg, rgba(12, 16, 17, 0) 0%, var(--bg) 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Outfit", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 72px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      text-decoration: none;
+    }
+
+    .brand-kicker {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .brand-name {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ghost-link {
+      display: none;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+    }
+
+    @media (min-width: 720px) {
+      .ghost-link { display: inline; }
+    }
+
+    .theme-toggle {
+      border: 1px solid var(--line);
+      background: var(--bg-elev);
+      color: var(--ink);
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .icon-sun { display: none; }
+    html[data-theme="dark"] .icon-moon { display: none; }
+    html[data-theme="dark"] .icon-sun { display: block; }
+
+    .hero-intro {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      align-items: center;
+      margin-top: 22px;
+    }
+
+    @media (min-width: 720px) {
+      .hero-intro {
+        grid-template-columns: 140px minmax(0, 1fr);
+        gap: 28px;
+      }
+    }
+
+    .hero-portrait {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center 18%;
+      border: 1px solid var(--line);
+      box-shadow: var(--card-shadow);
+    }
+
+    .hero {
+      padding: 64px 0 36px;
+    }
+
+    .hero-kicker {
+      color: var(--gold);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(42px, 7vw, 84px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-intro p {
+      max-width: 680px;
+      margin-top: 0;
+      color: var(--ink-soft);
+      font-size: 16px;
+      font-weight: 300;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 28px;
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 26px;
+      padding: 10px 0 80px;
+    }
+
+    .card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.28s ease, border-color 0.28s ease;
+      position: relative;
+    }
+
+    .card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+    .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--secondary));
+      opacity: 0.7;
+    }
+
+    .thumb {
+      aspect-ratio: 16 / 10;
+      background:
+        radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 40%),
+        radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--secondary) 18%, transparent), transparent 42%),
+        #101618;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thumb img,
+    .thumb video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-fallback {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      color: #d7c89a;
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .live-pill {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(8, 12, 13, 0.72);
+      color: #f4efe4;
+      border: 1px solid rgba(224, 197, 106, 0.45);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 9px;
+      border-radius: 999px;
+    }
+
+    .element-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(8, 12, 13, 0.72);
+      color: #f4efe4;
+      border: 1px solid rgba(200, 90, 46, 0.5);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 9px;
+      border-radius: 999px;
+    }
+
+    .card-body {
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .card-index {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .card h2 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 30px;
+      font-weight: 500;
+      line-height: 1.05;
+    }
+
+    .card-tag {
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+      font-family: "Cormorant Garamond", Georgia, serif;
+    }
+
+    .card-excerpt {
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 300;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-cta {
+      margin-top: auto;
+      padding-top: 12px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 48px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .foot {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .foot a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .foot a:hover { color: var(--gold); }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: var(--overlay);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .overlay.open { display: flex; }
+
+    .sheet {
+      position: relative;
+      width: min(1080px, 100%);
+      max-height: min(92vh, 900px);
+      overflow: hidden;
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    @media (min-width: 900px) {
+      .sheet {
+        grid-template-columns: minmax(0, 1.02fr) minmax(280px, 0.98fr);
+        grid-template-rows: minmax(0, 1fr);
+        align-items: stretch;
+      }
+    }
+
+    .sheet-media {
+      background: #0c1213;
+      position: relative;
+      aspect-ratio: 16 / 10;
+      max-height: 42vh;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    @media (min-width: 900px) {
+      .sheet-media {
+        aspect-ratio: auto;
+        height: 100%;
+        max-height: none;
+        min-height: 0;
+      }
+    }
+
+    .sheet-media img,
+    .sheet-media video,
+    .sheet-media iframe {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: center;
+      border: 0;
+      display: block;
+    }
+
+    .sheet-copy {
+      padding: 28px 26px 32px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      min-height: 0;
+    }
+
+    .sheet-copy h2 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 500;
+      line-height: 1;
+      margin: 8px 0 10px;
+    }
+
+    .sheet-tag {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 18px;
+      margin-bottom: 18px;
+    }
+
+    .sheet-desc {
+      color: var(--ink-soft);
+      font-size: 15px;
+      font-weight: 300;
+      white-space: pre-wrap;
+    }
+
+    .sheet-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #f7f3ea;
+    }
+
+    html[data-theme="light"] .btn-primary,
+    html:not([data-theme]) .btn-primary {
+      background: #c85a2e;
+      color: #f7f3ea;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(8,12,13,0.55);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    body.locked { overflow: hidden; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top">
+        <span class="brand-kicker">Exclusive gallery presentation</span>
+        <span class="brand-name">Dr. Bill Kolomyjec</span>
+      </a>
+      <div class="nav-actions">
+        <a class="ghost-link" href="#works">The works</a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <path d="M21 14.3A8.5 8.5 0 0 1 9.7 3 7.5 7.5 0 1 0 21 14.3z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <p class="hero-kicker">Elements · 2026</p>
+      <h1>Five living<br>elements.</h1>
+      <div class="hero-intro">
+        <img class="hero-portrait" src="media/dr-bill.jpg" alt="Dr. Bill Kolomyjec" />
+        <p>
+          Sky Above Clouds (space, ethereal), Tumbleweeds (air — gusting wind moving dead plants), Bull Kelp Dive (water), Spelunker (earth — cave walking into the earth), and yuleFire (fire) complete Dr. Bill Kolomyjec’s internal pentagram of the classical elements. Five autonomous generative systems. Click any work to read the full text and open the live piece.
+        </p>
+      </div>
+      <div class="meta-row">
+        <span>5 generative animations</span>
+        <span>Live code on GitHub Pages</span>
+        <span>The elemental cycle in code</span>
+      </div>
+    </section>
+
+    <section class="wrap grid" id="works" aria-label="Works"></section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>© 2026 Dr. Bill Kolomyjec. All rights reserved.</span>
+      <a href="https://www.instagram.com/drbillkolomyjec/" target="_blank" rel="noopener">Instagram</a>
+      <span>Exclusive gallery representation · The code keeps running.</span>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet" id="sheet">
+      <div class="sheet-media" id="sheetMedia"></div>
+      <div class="sheet-copy">
+        <p class="card-index" id="sheetIndex"></p>
+        <h2 id="sheetTitle"></h2>
+        <p class="sheet-tag" id="sheetTag"></p>
+        <div class="sheet-desc" id="sheetDesc"></div>
+        <div class="sheet-actions">
+          <a class="btn btn-primary" id="liveLink" target="_blank" rel="noopener">View live work</a>
+          <button class="btn btn-ghost" id="closeBtn" type="button">Close</button>
+        </div>
+      </div>
+      <button class="close" id="closeX" type="button" aria-label="Close">✕</button>
+    </div>
+  </div>
+
+  <script>
+    /*
+      ELEMENTS GALLERY CONFIG
+      Drop preview GIFs into /media using the filenames below.
+      Same guidance as Living Code: ~960–1280px long side, optimized GIFs.
+    */
+    const WORKS = [
+      {
+        id: "sky-above-clouds",
+        title: "skyAboveClouds",
+        element: "Space",
+        tagline: "Ethereal heavens after Georgia O’Keeffe — an infinite algorithmic horizon",
+        year: "2026",
+        preview: "media/sky-above-clouds.gif",
+        liveUrl: "https://kolomyjec.github.io/SkyAboveClouds/",
+        description: `The Concept
+
+Georgia O’Keeffe’s Sky Above Clouds series captured the sublime, overwhelming vastness of the heavens—a perspective shifting from the observer on the ground to the explorer among the clouds. In SkyAboveCloudsAI, I sought to translate that painterly obsession into the medium of procedural code.
+
+Where O’Keeffe used oil on canvas to immortalize a singular, infinite expansion, this project utilizes algorithms to render that expansion perpetual. It is a dialogue between the organic, ephemeral nature of weather and the rigid, mathematical nature of computation.
+
+The Algorithmic Brush
+
+This work is not a pre-rendered video, but a living system. Every cloud, star, and shift in atmospheric light is generated in real-time. The "brushstrokes" are variable functions:
+
+Procedural Clouds: Mimicking the organic drift of high-altitude formations, each cloud is born, traverses the digital viewport, and dissolves, only to be recreated.
+
+Temporal Cycles: The color palette is calculated through a continuous function, transitioning through the deep blues of night, the vibrant golds of sunrise, and the harsh clarity of noon, mirroring the Earth’s rotation.
+
+The Infinite Horizon: The project is designed to be an infinite loop, an algorithmic echo of the never-ending horizon that defined O'Keeffe's later works.
+
+The Experience
+
+SkyAboveCloudsAI is intended as a meditative installation. By stripping away the foreground and focusing entirely on the interplay of light and atmosphere, the viewer is invited to contemplate the same sense of distance and serenity found in the original works.
+
+The integration of the "retro" element and star fields acknowledges the digital nature of the piece—reminding us that while we look up to see the natural sky, we are increasingly viewing the world through the "window" of the screen. This project asks: can the binary and the procedural truly capture the essence of the sublime?
+
+It is an attempt to find the quiet, painterly soul within the code.`
+      },
+      {
+        id: "tumbleweeds",
+        title: "Tumbleweeds",
+        element: "Air",
+        tagline: "Gusting wind moving dead plants across a living desert road",
+        year: "2026",
+        preview: "media/tumbleweeds.gif",
+        liveUrl: "https://kolomyjec.github.io/tumbleweeds/",
+        description: `An empty desert road, a wind that never stops changing its mind, and a scatter of dead brush that has nowhere to be.
+
+The ground itself isn't a flat plane — it's built from layered noise, so the sand carries real bedforms: broad dune-scale swells and finer wind ripples that warp and stretch as they cross the shoulder of the road, exactly the way sand actually organizes itself under a prevailing wind. Each tumbleweed is a loose fractal tangle of twigs rather than a sculpted ball, casting a soft, porous shadow that reads as brush and not as a solid object.
+
+Nothing here follows a script. A wind system with its own speed, target, and sway drives real physics on every weed — gravity, bounce, drag — so each one tumbles, catches, stalls, and gets thrown forward again at its own moment, kicking up dust as it goes. Watch long enough and the wind itself visibly shifts its mood: calm stretches, sudden gusts, brief cross-currents that scatter the weeds sideways off the road's line.
+
+It's less a scene than a small weather system: give it wind and gravity and let the road do the rest. A print/capture tool is built in for saving a still frame at a chosen resolution, in case one particular moment of drift is worth keeping.
+
+Built with Three.js, running entirely in the browser — no build step, no external dependencies beyond the bundled three.min.js and OrbitControls.js.
+
+Viewing: Drag to orbit, scroll to zoom, Space or P to pause, Ctrl+I for info, Ctrl+P to print/save a frame.`
+      },
+      {
+        id: "bull-kelp-dive",
+        title: "Bull Kelp Dive",
+        element: "Water",
+        tagline: "A helical descent through a living bull kelp forest",
+        year: "2026",
+        preview: "media/bull-kelp-dive.gif",
+        liveUrl: "https://kolomyjec.github.io/bullKelpDive/",
+        description: `Bull Kelp Dive immerses the viewer in a generative underwater forest of towering bull kelp. An automated helical ROV path navigates the swaying stalks while light filters through the canopy in shifting greens and golds.
+
+The piece presents a living aquatic system: the kelp moves with the current, light caustics play across the water column, and the camera follows a continuous helical pattern that reveals the scale and density of the forest from within.
+
+Interactive controls and telemetry (position, LookAt target) allow deeper exploration. Press Cmd/Ctrl + I to toggle the info panel.
+
+[Placeholder description — full artist text forthcoming. Preview GIF to be added.]`
+      },
+      {
+        id: "spelunker",
+        title: "Spelunker",
+        element: "Earth",
+        tagline: "Walking into the earth through a procedural cave",
+        year: "2026",
+        preview: "media/spelunker.gif",
+        liveUrl: "https://lukefivehundred.github.io/Spelunker",
+        description: `Spelunker is an interactive generative descent into the earth. Walk through a procedural cave system, illuminating the path with a headlamp as the rock forms around you.
+
+Each visit generates a new subterranean landscape — a living exploration of earth’s hidden architecture. Keyboard controls allow movement, speed adjustment, headlamp toggle, look-around, and regeneration of the cave.
+
+The piece was developed with procedural cave generation and generative art design. Press Space to pause, R to generate a new cave, L for headlamp, and Ctrl/Cmd + I for the info dialog.
+
+[Placeholder description — full artist text forthcoming. Preview GIF to be added.]`
+      },
+      {
+        id: "yule-fire",
+        title: "yuleFire",
+        element: "Fire",
+        tagline: "A generative wood fire — fluid-simulated flame that completes the set",
+        year: "2026",
+        preview: "media/yule-fire.gif",
+        liveUrl: "https://lukefivehundred.github.io/yuleFire/",
+        description: `yuleFire is a generative wood fire rendered with fluid simulation. Embers rise, flames dance and roar in response to interaction.
+
+Stoke the fire, introduce a breeze across the opening, toggle sound, hearth sprites, and intensity from embers to roaring. The piece responds in real time, creating a living flame that completes Dr. Bill’s internal pentagram of the elements.
+
+Made in collaboration with Claude by Anthropic. Drag to look around, scroll to lean in, ⌘I to show or hide the control panel.
+
+[Placeholder description — full artist text forthcoming. Preview GIF to be added.]`
+      }
+    ];
+
+    const grid = document.getElementById("works");
+    const overlay = document.getElementById("overlay");
+    const liveLink = document.getElementById("liveLink");
+
+    const excerpt = (text) => text
+      .replace(/^\s*#{1,6}\s+/gm, "")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    function mediaTag(src, title, lazy) {
+      const ext = (src.split(".").pop() || "").toLowerCase();
+      if (ext === "mp4" || ext === "webm") {
+        return `<video autoplay muted loop playsinline aria-label="${title}"><source src="${src}"></video>`;
+      }
+      const lazyAttr = lazy ? ' loading="lazy" decoding="async"' : ' decoding="async"';
+      return `<img src="${src}" alt="${title}"${lazyAttr} onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'thumb-fallback',textContent:'Preview GIF forthcoming'}))">`;
+    }
+
+    WORKS.forEach((work, i) => {
+      const n = String(i + 1).padStart(2, "0");
+      const btn = document.createElement("button");
+      btn.className = "card";
+      btn.type = "button";
+      btn.setAttribute("aria-label", `Open ${work.title}`);
+      btn.innerHTML = `
+        <div class="thumb">
+          ${mediaTag(work.preview, work.title, true)}
+          <span class="element-badge">${work.element}</span>
+          <span class="live-pill">Live code</span>
+        </div>
+        <div class="card-body">
+          <p class="card-index">${n}  /  ${work.year}</p>
+          <h2>${work.title}</h2>
+          <p class="card-tag">${work.tagline}</p>
+          <p class="card-excerpt">${excerpt(work.description)}</p>
+          <p class="card-cta">Read the work →</p>
+        </div>`;
+      btn.addEventListener("click", () => openWork(work, n));
+      grid.appendChild(btn);
+    });
+
+    function openWork(work, n) {
+      document.getElementById("sheetIndex").textContent = `${n}  ·  ${work.element}  ·  ${work.year}`;
+      document.getElementById("sheetTitle").textContent = work.title;
+      document.getElementById("sheetTag").textContent = work.tagline;
+      document.getElementById("sheetDesc").textContent = work.description;
+      document.getElementById("sheetMedia").innerHTML = mediaTag(work.preview, work.title, false);
+      liveLink.href = work.liveUrl;
+      overlay.classList.add("open");
+      document.body.classList.add("locked");
+      document.getElementById("closeX").focus();
+    }
+
+    function closeWork() {
+      overlay.classList.remove("open");
+      document.body.classList.remove("locked");
+    }
+
+    document.getElementById("closeBtn").addEventListener("click", closeWork);
+    document.getElementById("closeX").addEventListener("click", closeWork);
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) closeWork(); });
+    window.addEventListener("keydown", (e) => { if (e.key === "Escape") closeWork(); });
+
+    const root = document.documentElement;
+    const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const saved = localStorage.getItem("elements-theme");
+
+    function systemTheme() {
+      return themeQuery.matches ? "dark" : "light";
+    }
+
+    function applyTheme(theme) {
+      root.setAttribute("data-theme", theme);
+    }
+
+    applyTheme(saved || systemTheme());
+
+    themeQuery.addEventListener("change", () => {
+      if (!localStorage.getItem("elements-theme")) applyTheme(systemTheme());
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const next = (root.getAttribute("data-theme") === "dark") ? "light" : "dark";
+      applyTheme(next);
+      localStorage.setItem("elements-theme", next);
+    });
+  </script>
+</body>
+</html>
